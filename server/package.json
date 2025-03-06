@@ -26,6 +26,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon -w src/*/**.ts --exec ts-node src/index.ts"
+    "dev": "nodemon -w src/**/*.ts --exec ts-node src/index.ts"
   }
 }
