@@ -2,6 +2,7 @@ import express from 'express';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
 import { z } from 'zod';
+import { genMcpServerProject } from './templateWriter';
 
 const server = new McpServer({
   name: "mcp_server_creator",
@@ -14,6 +15,23 @@ server.tool(
   async ({ a, b }) => ({
     content: [{ type: 'text', text: String(a + b) }]
   })
+)
+
+server.tool(
+  "generate-project",
+  { serverName: z.string(), serverDescription: z.string(), rootDir: z.string() },
+  async ({ serverName, serverDescription, rootDir }) => {
+    try {
+      genMcpServerProject({ serverName, serverDescription, rootDir })
+      return {
+        content: [{ type: 'text', text: "success" }]
+      }
+    } catch (error) {
+      return {
+        content: [{ type: 'text', text: 'failed' }, { type: 'text', text: `error: ${error}` }]
+      }
+    }
+  }
 )
 
 const app = express();

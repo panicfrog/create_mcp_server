@@ -154,7 +154,7 @@ function genFileFromTemplate(tempResource: TempResource, mapping: Record<string,
   }
 }
 
-export const genIndex = genFileFromTemplate(indexTemp, { '#{SERVER_NAME}#}': 'serverName' }) as (value: Record<'serverName', string>) => Resource;
-export const genPacakgeJson = genFileFromTemplate(packageJsonTemp, { '#{SERVER_NAME}#': 'serverName', '#{SERVER_DESCRIPT}#': 'serverDescript' }) as (value: Record<'serverName' | 'serverDescript', string>) => Resource;
+export const genIndex = genFileFromTemplate(indexTemp, { '#{SERVER_NAME}#': 'serverName' }) as (value: Record<'serverName', string>) => Resource;
+export const genPacakgeJson = genFileFromTemplate(packageJsonTemp, { '#{SERVER_NAME}#': 'serverName', '#{SERVER_DESCRIPT}#': 'serverDescription' }) as (value: Record<'serverName' | 'serverDescription', string>) => Resource;
 export const genTsconfig = genFileFromTemplate(tsconfigTemp, {})
 

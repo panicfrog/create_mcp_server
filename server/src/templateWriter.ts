@@ -4,7 +4,7 @@ import path from 'path'
 
 type TemplateParams = {
   serverName: string,
-  serverDescrition: string,
+  serverDescription: string,
   rootDir: string
 }
 
@@ -57,16 +57,11 @@ function writeFile(rootDir: string, resource: { relativeDir: string, name: strin
 }
 
 export function genMcpServerProject(params: TemplateParams) {
-  try {
-    ensureEmptyWritableDir(params.rootDir)
-    let package_json = genPacakgeJson({ serverName: params.serverName, serverDescript: params.serverDescrition })
-    writeFile(params.rootDir, package_json)
-    let index_js = genIndex({ serverName: params.serverName })
-    writeFile(params.rootDir, index_js)
-    let tsconfig = genTsconfig({})
-    writeFile(params.rootDir, tsconfig)
-  } catch (e) {
-    console.error(e)
-    return
-  }
+  ensureEmptyWritableDir(params.rootDir)
+  let package_json = genPacakgeJson({ serverName: params.serverName, serverDescription: params.serverDescription })
+  writeFile(params.rootDir, package_json)
+  let index_js = genIndex({ serverName: params.serverName })
+  writeFile(params.rootDir, index_js)
+  let tsconfig = genTsconfig({})
+  writeFile(params.rootDir, tsconfig)
 }
