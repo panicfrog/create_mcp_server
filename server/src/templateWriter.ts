@@ -57,11 +57,12 @@ function writeFile(rootDir: string, resource: { relativeDir: string, name: strin
 }
 
 export function genMcpServerProject(params: TemplateParams) {
-  ensureEmptyWritableDir(params.rootDir)
-  let package_json = genPacakgeJson({ serverName: params.serverName, serverDescription: params.serverDescription })
-  writeFile(params.rootDir, package_json)
-  let index_js = genIndex({ serverName: params.serverName })
-  writeFile(params.rootDir, index_js)
+  let { rootDir, ...rev } = params;
+  ensureEmptyWritableDir(rootDir)
+  let package_json = genPacakgeJson(rev)
+  writeFile(rootDir, package_json)
+  let index_js = genIndex({ serverName: rev.serverName })
+  writeFile(rootDir, index_js)
   let tsconfig = genTsconfig({})
-  writeFile(params.rootDir, tsconfig)
+  writeFile(rootDir, tsconfig)
 }
