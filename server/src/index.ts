@@ -1,6 +1,7 @@
 import express from 'express';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { genMcpServerProject } from './templateWriter';
 
@@ -34,23 +35,33 @@ server.tool(
   }
 )
 
-const app = express();
-const PORT = 3001;
+let arglist = process.argv
 
-let transport: SSEServerTransport | undefined = undefined;
+if (arglist.length === 3 && arglist[2] === '--stdio') {
+  let transport = new StdioServerTransport();
+  (async () => {
+    await server.connect(transport);
+  })()
+} else {
+  const app = express();
+  const PORT = 3001;
 
-app.get("/sse", async (_, res) => {
-  const _transport = new SSEServerTransport("/messages", res);
-  transport = _transport;
-  await server.connect(_transport)
-})
+  let transport: SSEServerTransport | undefined = undefined;
 
-app.post("/messages", async (req, res) => {
-  if (transport) {
-    await transport.handlePostMessage(req, res)
-  }
-})
+  app.get("/sse", async (_, res) => {
+    const _transport = new SSEServerTransport("/messages", res);
+    transport = _transport;
+    await server.connect(_transport)
+  })
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`server listening on port: ${PORT}`);
-});
+  app.post("/messages", async (req, res) => {
+    if (transport) {
+      await transport.handlePostMessage(req, res)
+    }
+  })
+
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`server listening on port: ${PORT}`);
+  });
+}
+
