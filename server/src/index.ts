@@ -20,7 +20,12 @@ server.tool(
 
 server.tool(
   "generate-project",
-  { serverName: z.string(), serverDescription: z.string(), rootDir: z.string() },
+  "generate a mcp server project which the `server name` `project absolute directory path` and `server's description`",
+  {
+    serverName: z.string().describe("server name, it shouled be invaid npm package name"),
+    serverDescription: z.string().describe("server's description, it will be the description of npm package"),
+    rootDir: z.string().describe("project absolute directory path, it is the abosolute path for the npm package")
+  },
   async ({ serverName, serverDescription, rootDir }) => {
     try {
       genMcpServerProject({ serverName, serverDescription, rootDir })
