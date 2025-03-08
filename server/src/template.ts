@@ -128,14 +128,14 @@ const tsconfigTemp: TempResource = {
   tempContent: TS_CONFIG_TEMPLATE
 };
 
-type GenFunc = (value: Record<string, string>) => Resource;
+type GenFunc<T extends string> = (value: Record<T, string>) => Resource;
 
-function genFileFromTemplate(tempResource: TempResource, mapping: Record<string, string>): GenFunc {
-  return (value: Record<string, string>) => {
+function genFileFromTemplate<T extends string>(tempResource: TempResource, mapping: Record<string, string>): GenFunc<T> {
+  return (value: Record<T, string>) => {
     let valueMapping: Record<string, string> = {};
     for (const mk of Object.keys(mapping)) {
-      let mv = mapping[mk]
-      let vv = value[mk]
+      let mv = mapping[mk as T]
+      let vv = value[mk as T]
       if (!!vv) {
         valueMapping[mv] = vv
       }
@@ -154,7 +154,7 @@ function genFileFromTemplate(tempResource: TempResource, mapping: Record<string,
   }
 }
 
-export const genIndex = genFileFromTemplate(indexTemp, { '#{SERVER_NAME}#': 'serverName' }) as (value: Record<'serverName', string>) => Resource;
-export const genPacakgeJson = genFileFromTemplate(packageJsonTemp, { '#{SERVER_NAME}#': 'serverName', '#{SERVER_DESCRIPT}#': 'serverDescription' }) as (value: Record<'serverName' | 'serverDescription', string>) => Resource;
+export const genIndex = genFileFromTemplate<'serverName'>(indexTemp, { 'serverName': '#{SERVER_NAME}#' });
+export const genPacakgeJson = genFileFromTemplate<'serverName' | 'serverDescription'>(packageJsonTemp, { 'serverName': '#{SERVER_NAME}#', 'serverDescription': '#{SERVER_DESCRIPT}#' });
 export const genTsconfig = genFileFromTemplate(tsconfigTemp, {})
 
